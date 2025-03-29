@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результат анализа</title>
+    <style>
+        /* Общий стиль страницы */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* Контейнер с результатом */
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            max-width: 50%;
+        }
+
+        h2 {
+            font-size: 40pt;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 30pt;
+            margin-bottom: 10px;
+        }
+
+        .level {
+            font-size: 30pt;
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+
+        .reason {
+            font-size: 30pt;
+            color: #f8f8f8;
+        }
+
+        /* Кнопка возврата */
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #ff9800;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            background-color: #e68900;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Результат анализа</h2>
+        <p>Ваш уровень безопасности: <span class="level">{{ max_level }}</span></p>
+        <p class="reason">{{ reason }}</p>
+        <a href="/" class="button">Вернуться назад</a>
+    </div>
+</body>
+</html>

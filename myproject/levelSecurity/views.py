@@ -1,26 +1,21 @@
 from django.shortcuts import render
-
-from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PD_TYPES, LEVEL_TABLE, REASON_DICT
-
+from .security_measures import SECURITY_MEASURES  # ДОБАВЛЕНО
 
 def get_id(strings_array):
-
-    # Переменная для хранения наибольшего числа и соответствующей строки
-    min_num = float('inf')  # Начинаем с очень большого числа
+    if not strings_array:
+        return None
+    min_num = float('inf')
     min_string = ""
-
-    # Проходим по всем строкам
     for s in strings_array:
-        # Извлекаем первый символ и преобразуем его в число
-        num = int(s[0])
-
-        # Обновляем наименьшее число и строку, если найдено меньшее число
-        if num < min_num:
-            min_num = num
-            min_string = s
-
+        try:
+            num = int(s[0])
+            if num < min_num:
+                min_num = num
+                min_string = s
+        except (IndexError, ValueError):
+            continue
     return min_string
 
 def form_view(request):
@@ -28,17 +23,14 @@ def form_view(request):
         cert1 = request.POST.get("cert-os")
         cert2 = request.POST.get("cert-app")
         network = request.POST.get("network")
-        number = request.POST.get("number")  # Будет 'lt' или 'gt'
+        number = request.POST.get("number")  # 'lt' или 'gt'
 
         selected_options = [item for item in PD_TYPES if request.POST.get(f"option_{item}")]
 
-        # Проверка на пустые значения
-        if not all([cert1, cert2, network, number, selected_options]):
+        if not all([cert1, cert2, network, number]):
             return HttpResponse("Ошибка: Все поля должны быть заполнены!", status=400)
 
         threat_type = 3
-        subjects_type = ""
-
         if network == "network":
             threat_type = 3
         if cert2 != "certified":
@@ -46,21 +38,26 @@ def form_view(request):
         if cert1 != "certified":
             threat_type = 1
 
-        # Проверка, что выбрано меньше или больше 100 тыс
-        if number == "gt":
-            subjects_type = "gt"
-        else:
-            subjects_type = "lt"
+        subjects_type = "gt" if number == "gt" else "lt"
 
         level_ids = []
-
         for option in selected_options:
             level_ids.append(LEVEL_TABLE[option][threat_type][subjects_type])
 
         max_level = get_id(level_ids)
+        level_digit = int(max_level[0])  # Извлекаем цифру из уровня, например из \"2г\" → 2
 
-        return render(request, "levelSecurity/result.html", {"max_level": max_level, "reason": REASON_DICT[max_level]})
+        # Формируем меры по разделам
+        measures_by_section = {}
+        for section, items in SECURITY_MEASURES.items():
+            filtered = [i for i in items if level_digit in i["levels"]]
+            if filtered:
+                measures_by_section[section] = filtered
+
+        return render(request, "levelSecurity/result.html", {
+            "max_level": max_level,
+            "reason": REASON_DICT.get(max_level, "Ошибка: уровень не найден."),
+            "measures_by_section": measures_by_section
+        })
 
     return render(request, "levelSecurity/home.html", {"PD_TYPES": PD_TYPES})
-
-

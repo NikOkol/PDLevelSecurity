@@ -1,79 +1,139 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат анализа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Общий стиль страницы */
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f8;
             margin: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            padding: 40px 20px;
+            color: #2e2e2e;
         }
 
-        /* Контейнер с результатом */
         .container {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1e3a8a;
             text-align: center;
-            backdrop-filter: blur(10px);
-            max-width: 50%;
         }
 
-        h2 {
-            font-size: 40pt;
-            margin-bottom: 15px;
-        }
-
-        p {
-            font-size: 30pt;
-            margin-bottom: 10px;
-        }
-
-        .level {
-            font-size: 30pt;
-            font-weight: bold;
-            color: #ffeb3b;
+        .level-badge {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            margin: 0 auto 24px;
         }
 
         .reason {
-            font-size: 30pt;
-            color: #f8f8f8;
+            font-size: 16px;
+            color: #374151;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
-        /* Кнопка возврата */
+        details {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary:before {
+            content: '▶';
+            font-size: 14px;
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] summary:before {
+            transform: rotate(90deg);
+        }
+
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 5px;
+        }
+
         .button {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 40px;
             padding: 12px 25px;
-            background-color: #ff9800;
+            background-color: #2563eb;
             color: white;
             text-decoration: none;
-            font-size: 18px;
-            border-radius: 8px;
-            transition: 0.3s;
+            font-size: 16px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
         }
 
         .button:hover {
-            background-color: #e68900;
-            transform: scale(1.05);
+            background-color: #1d4ed8;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Результат анализа</h2>
-        <p>Ваш уровень безопасности: <span class="level">{{ max_level }}</span></p>
-        <p class="reason">{{ reason }}</p>
-        <a href="/" class="button">Вернуться назад</a>
+<div class="container">
+    <h1>Результат анализа уровня защищённости</h1>
+
+    <div style="text-align: center;">
+        <div class="level-badge">Уровень: {{ max_level }}</div>
     </div>
+
+    <p class="reason">{{ reason }}</p>
+
+    {% if measures_by_section %}
+        <h2>Необходимые меры для уровня {{ max_level|slice:":1" }}:</h2>
+        {% for section, measures in measures_by_section.items %}
+            <details>
+                <summary>{{ section }}</summary>
+                <ul>
+                    {% for item in measures %}
+                        <li><b>{{ item.code }}</b>: {{ item.text }}</li>
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endfor %}
+    {% endif %}
+
+    <div style="text-align: center;">
+        <a href="/" class="button">Вернуться к форме</a>
+    </div>
+</div>
 </body>
 </html>

@@ -2,163 +2,40 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оценка уровня защищенности ИСПДн</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Выбор функции</title>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 40px 20px;
-            color: #2e2e2e;
-        }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 26px;
-            margin-top: 20px;
-            margin-bottom: 30px;
-        }
-
-        label {
-            font-size: 16px;
-            display: block;
-            margin-top: 15px;
-        }
-
-        select, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 15px;
-        }
-
-        .checkbox-group, .radio-group {
-            margin-top: 20px;
-        }
-
-        .checkbox-group label,
-        .radio-group label {
             display: flex;
+            height: 100vh;
+            justify-content: center;
             align-items: center;
-            font-size: 15px;
-            margin-bottom: 8px;
+            background-color: #f0f0f0;
+            margin: 0;
         }
-
-        .checkbox-group input,
-        .radio-group input {
-            margin-right: 10px;
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-
-        button {
-            display: block;
-            width: 100%;
-            margin-top: 30px;
-            padding: 14px;
-            font-size: 16px;
+        .buttons a {
+            text-align: center;
+            padding: 15px 25px;
+            background-color: #007bff;
             color: white;
-            background: #2563eb;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s;
         }
-
-        button:hover {
-            background: #1d4ed8;
+        .buttons a:hover {
+            background-color: #0056b3;
         }
-
-        .error {
-            color: red;
-            font-size: 14px;
-            display: none;
-            margin-top: 5px;
-        }
-
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Выбор параметров оценки</h1>
-
-    <form method="post" onsubmit="return validateForm()">
-        {% csrf_token %}
-
-        <label for="cert-os">Сертификат операционной системы:</label>
-        <select name="cert-os" id="cert-os" required>
-            <option value="">Выберите...</option>
-            <option value="certified">Сертификат</option>
-            <option value="not">Нет</option>
-        </select>
-
-        <label for="cert-app">Сертификат прикладного ПО:</label>
-        <select name="cert-app" id="cert-app" required>
-            <option value="">Выберите...</option>
-            <option value="certified">Сертификат</option>
-            <option value="not">Нет</option>
-        </select>
-
-        <label for="network">Тип соединения:</label>
-        <select name="network" id="network" required>
-            <option value="">Выберите...</option>
-            <option value="network">Сетевой</option>
-            <option value="local">Локальный</option>
-        </select>
-
-        <div class="checkbox-group">
-            <label><strong>Категории персональных данных:</strong></label>
-            {% for item in PD_TYPES %}
-                <label>
-                    <input type="checkbox" name="option_{{ item }}" value="{{ item }}">
-                    {{ item }}
-                </label>
-            {% endfor %}
-        </div>
-
-        <div class="radio-group">
-            <label><strong>Число субъектов ПД:</strong></label>
-            <label>
-                <input type="radio" name="number" value="lt" id="less">
-                Меньше 100 тыс.
-            </label>
-            <label>
-                <input type="radio" name="number" value="gt" id="more">
-                Больше 100 тыс.
-            </label>
-            <p class="error" id="error-message">Пожалуйста, выберите одно значение.</p>
-        </div>
-
-        <button type="submit">Провести анализ</button>
-    </form>
-
-</div>
-
-<script>
-    function validateForm() {
-        const less = document.getElementById("less").checked;
-        const more = document.getElementById("more").checked;
-        const errorMessage = document.getElementById("error-message");
-
-        if (!less && !more) {
-            errorMessage.style.display = "block";
-            return false;
-        } else {
-            errorMessage.style.display = "none";
-            return true;
-        }
-    }
-</script>
+    <div class="buttons">
+        <a href="{% url 'pd_form_view' %}">Уровни защищенности ПД</a>
+        <a href="{% url 'gis_form_view' %}">Класс защищенности ГИС</a>
+    </div>
 </body>
 </html>

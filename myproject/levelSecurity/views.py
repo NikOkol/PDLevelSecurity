@@ -1,7 +1,31 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import PD_TYPES, LEVEL_TABLE, REASON_DICT
-from .security_measures import SECURITY_MEASURES  # ДОБАВЛЕНО
+from .security_measures import SECURITY_MEASURES
+from .gis_measures import GIS_MEASURES, CLASS_TABLE
+
+
+def home_view(request):
+    return render(request, 'levelSecurity/home.html')
+
+def gis_form_view(request):
+    if request.method == "POST":
+        level = int(request.POST.get("signif"))
+        scale = request.POST.get("scale")
+        protect_class = CLASS_TABLE[level][scale]
+
+        measures_by_section = {}
+        for section, items in SECURITY_MEASURES.items():
+            filtered = [i for i in items if protect_class in i["levels"]]
+            if filtered:
+                measures_by_section[section] = filtered
+
+        return render(request, "levelSecurity/result.html", {
+            "max_level": protect_class,
+            "analys_type": "класса",
+            "measures_by_section": measures_by_section
+        })
+    return render(request, 'levelSecurity/gis_page.html')
 
 def get_id(strings_array):
     if not strings_array:
@@ -18,7 +42,7 @@ def get_id(strings_array):
             continue
     return min_string
 
-def form_view(request):
+def pd_form_view(request):
     if request.method == "POST":
         cert1 = request.POST.get("cert-os")
         cert2 = request.POST.get("cert-app")
@@ -57,7 +81,8 @@ def form_view(request):
         return render(request, "levelSecurity/result.html", {
             "max_level": max_level,
             "reason": REASON_DICT.get(max_level, "Ошибка: уровень не найден."),
+            "analys_type": "уровня",
             "measures_by_section": measures_by_section
         })
 
-    return render(request, "levelSecurity/home.html", {"PD_TYPES": PD_TYPES})
+    return render(request, "levelSecurity/pd_page.html", {"PD_TYPES": PD_TYPES})

@@ -48,6 +48,12 @@ def pd_form_view(request):
         cert2 = request.POST.get("cert-app")
         network = request.POST.get("network")
         number = request.POST.get("number")  # 'lt' или 'gt'
+        checkbox_value = request.POST.get('employee') == 'on'
+        is_employee = ""
+        if checkbox_value:
+            is_employee = "empl"
+        else:
+            is_employee = "notempl"
 
         selected_options = [item for item in PD_TYPES if request.POST.get(f"option_{item}")]
 
@@ -66,7 +72,7 @@ def pd_form_view(request):
 
         level_ids = []
         for option in selected_options:
-            level_ids.append(LEVEL_TABLE[option][threat_type][subjects_type])
+            level_ids.append(LEVEL_TABLE[option][threat_type][subjects_type][is_employee])
 
         max_level = get_id(level_ids)
         level_digit = int(max_level[0])  # Извлекаем цифру из уровня, например из \"2г\" → 2

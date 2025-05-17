@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from .models import PD_TYPES, LEVEL_TABLE, REASON_DICT
 from .security_measures import SECURITY_MEASURES
 from .gis_measures import GIS_MEASURES, CLASS_TABLE
-
+from django.shortcuts import redirect
+def custom_404_view(request, exception):
+    return redirect('/')
 
 def home_view(request):
     return render(request, 'levelSecurity/home.html')

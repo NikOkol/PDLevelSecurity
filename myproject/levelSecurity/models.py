@@ -22,7 +22,7 @@ LEVEL_TABLE = {
     "Биометрические": {
         1: {"gt": {"empl": "1а", "notempl": "1а"}, "lt": {"empl": "1а", "notempl": "1а"}},
         2: {"gt": {"empl": "2в", "notempl": "2в"}, "lt": {"empl": "2в", "notempl": "2в"}},
-        3: {"gt": "3г", "lt": "3г"},
+        3: {"gt": {"empl": "3г", "notempl": "3г"}, "lt": {"empl": "3г", "notempl": "3г"}},
     },
     "Общедоступные": {
         1: {"gt": {"empl": "2а", "notempl": "2а"}, "lt": {"empl": "2а", "notempl": "2а"}},

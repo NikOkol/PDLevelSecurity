@@ -130,6 +130,7 @@
 
         <button type="submit">Провести анализ</button>
     </form>
+    <button type="button" id="randomizeBtn">Случайные значения</button>
 
 </div>
 
@@ -147,6 +148,20 @@
             return true;
         }
     }
+
+    document.getElementById('randomizeBtn').addEventListener('click', function () {
+        // Уровень значимости (1, 2, 3)
+        const signif = document.getElementById('signif');
+        const signifOptions = Array.from(signif.options).filter(opt => opt.value !== "");
+        signif.value = signifOptions[Math.floor(Math.random() * signifOptions.length)].value;
+
+        // Масштаб
+        const scale = document.getElementById('scale');
+        const scaleOptions = Array.from(scale.options).filter(opt => opt.value !== "");
+        scale.value = scaleOptions[Math.floor(Math.random() * scaleOptions.length)].value;
+    });
+
+
 </script>
 </body>
 </html>

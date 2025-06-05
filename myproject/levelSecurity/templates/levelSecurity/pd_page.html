@@ -162,6 +162,7 @@
 
         <button type="submit">Провести анализ</button>
     </form>
+    <button type="button" id="randomizeBtn">Случайные значения</button>
 
 </div>
 
@@ -179,6 +180,34 @@
             return true;
         }
     }
+    document.getElementById('randomizeBtn').addEventListener('click', function () {
+        // Селекты
+        const randomSelect = (id) => {
+            const select = document.getElementById(id);
+            const options = Array.from(select.options).filter(opt => opt.value !== "");
+            const random = options[Math.floor(Math.random() * options.length)];
+            select.value = random.value;
+        };
+
+        randomSelect('cert-os');
+        randomSelect('cert-app');
+        randomSelect('network');
+
+        // Чекбоксы с категориями ПД (name начинается с option_)
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="option_"]');
+        checkboxes.forEach(cb => {
+            cb.checked = Math.random() < 0.5; // С вероятностью 50%
+        });
+
+        // Радиокнопки (число субъектов ПД)
+        const radios = document.querySelectorAll('input[type="radio"][name="number"]');
+        const randomRadio = radios[Math.floor(Math.random() * radios.length)];
+        randomRadio.checked = true;
+
+        // Чекбокс "Сотрудники"
+        const employeeCheckbox = document.querySelector('input[type="checkbox"][name="employee"]');
+        employeeCheckbox.checked = Math.random() < 0.5;
+    });
 </script>
 </body>
 </html>
